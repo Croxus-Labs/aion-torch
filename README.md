@@ -18,7 +18,7 @@ and improves convergence without manual tuning.
 
 **AION demonstrates superior numerical stability and faster convergence.**
 
-![AION vs Standard Transformer Crash Test](examples/outputs/crash_test_results_gpu.png)
+![AION vs Standard Transformer Crash Test](https://raw.githubusercontent.com/Sweet-Epoch-Labs/aion-torch/main/examples/outputs/crash_test_results_gpu.png)
 
 _600-layer transformer test on GPU: Both models completed all 150 training steps successfully. AION Transformer achieved significantly lower loss (0.0011 ± 0.0003) and more stable gradients compared to Standard Transformer (0.0075 ± 0.0015)._
 
@@ -70,7 +70,7 @@ out = layer(x, y)             # Adaptive residual: x + α·y
 
 **AION adds ~36% computational overhead per training step.**
 
-![Overhead Benchmark Results](examples/outputs/overhead_test_results_gpu.png)
+![Overhead Benchmark Results](https://raw.githubusercontent.com/Sweet-Epoch-Labs/aion-torch/main/examples/outputs/overhead_test_results_gpu.png)
 
 _Benchmark configuration: 4-layer transformer, batch size 8, sequence length 128, dimension 512. Results averaged over 150 training steps (after 20 warmup steps)._
 
