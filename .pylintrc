@@ -1,0 +1,18 @@
+[MASTER]
+ignore=venv,.git,__pycache__,.pytest_cache
+
+[MESSAGES CONTROL]
+disable=
+    C0111,  # missing-docstring
+    W0212,  # protected-access (OK in tests)
+    E0401,  # import-error (handled by conftest.py)
+
+[TYPECHECK]
+ignored-modules=aion_torch
+
+[DESIGN]
+max-args=10
+max-attributes=15
+
+[FORMAT]
+max-line-length=100

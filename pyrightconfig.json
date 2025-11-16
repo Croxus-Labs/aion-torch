@@ -1,0 +1,18 @@
+{
+  "include": [
+    "src",
+    "tests"
+  ],
+  "exclude": [
+    "venv",
+    "**/__pycache__"
+  ],
+  "extraPaths": [
+    "src"
+  ],
+  "reportMissingImports": "warning",
+  "reportMissingTypeStubs": "none",
+  "reportPrivateUsage": "none",
+  "pythonVersion": "3.10",
+  "typeCheckingMode": "basic"
+}

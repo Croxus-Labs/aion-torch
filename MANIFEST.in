@@ -1,0 +1,25 @@
+# Include essential files
+include LICENSE
+include README.md
+include pyproject.toml
+
+# Exclude development files from distribution
+global-exclude examples/
+global-exclude tests/
+global-exclude venv/
+global-exclude .venv/
+global-exclude *.pyc
+global-exclude __pycache__/
+global-exclude .git/
+global-exclude .github/
+global-exclude *.egg-info/
+global-exclude build/
+global-exclude dist/
+global-exclude .pytest_cache/
+global-exclude .mypy_cache/
+global-exclude .ruff_cache/
+global-exclude *.csv
+global-exclude *.png
+global-exclude .DS_Store
+global-exclude .gitignore
+global-exclude .pre-commit-config.yaml
