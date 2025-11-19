@@ -106,3 +106,27 @@ class TestEnergy:
 
         assert e.shape == (8, 128, 1)
         assert torch.all(e >= 0)
+
+    def test_jit_compiled_function_coverage(self) -> None:
+        """Test that JIT-compiled energy function executes all code paths."""
+        # Test with different dtypes to ensure dtype conversion and return paths are hit
+        for dtype in [torch.float32, torch.float16, torch.float64]:
+            x = torch.randn(4, 8, dtype=dtype)
+            e = energy(x, dim=-1, keepdim=True)
+
+            # Verify the function executed and returned correct dtype
+            assert e.dtype == dtype
+            assert e.shape == (4, 1)  # dim=-1 reduces last dimension
+            assert torch.all(e >= 0)
+
+        # Test with keepdim=False to hit that path
+        x = torch.randn(4, 8, dtype=torch.float32)
+        e = energy(x, dim=-1, keepdim=False)
+        assert e.shape == (4,)
+        assert e.dtype == torch.float32
+
+        # Test with 3D tensor to ensure all paths are covered
+        x = torch.randn(4, 8, 16, dtype=torch.float32)
+        e = energy(x, dim=-1, keepdim=True)
+        assert e.shape == (4, 8, 1)
+        assert e.dtype == torch.float32
