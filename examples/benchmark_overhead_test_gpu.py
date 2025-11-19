@@ -124,7 +124,9 @@ def benchmark_model(model: nn.Module, name: str) -> tuple[BenchmarkResult, list[
     """
 
     model.train()
-    optimizer = torch.optim.AdamW(model.parameters(), lr=1e-3, betas=(0.9, 0.95), eps=1e-8, weight_decay=0.0)
+    optimizer = torch.optim.AdamW(
+        model.parameters(), lr=1e-3, betas=(0.9, 0.95), eps=1e-8, weight_decay=0.0
+    )
     criterion = nn.MSELoss()
 
     x = torch.randn(BATCH_SIZE, SEQ_LEN, DIM, device=DEVICE)

@@ -100,7 +100,9 @@ class AionResidual(nn.Module):
         if y.numel() == 0:
             raise ValueError("Input tensor y cannot be empty")
         if x.shape != y.shape:
-            raise ValueError(f"Input shapes must match: x.shape={x.shape}, y.shape={y.shape}")
+            raise ValueError(
+                f"Input shapes must match: x.shape={x.shape}, y.shape={y.shape}"
+            )
 
         # Always update alpha in training mode
         # This ensures correct behavior in distributed training (DataParallel/DDP)
@@ -118,14 +120,19 @@ class AionResidual(nn.Module):
 
             # Distributed synchronization: Average ratio across all ranks
             if torch.distributed.is_available() and torch.distributed.is_initialized():
-                torch.distributed.all_reduce(ratio_mean, op=torch.distributed.ReduceOp.AVG)
+                torch.distributed.all_reduce(
+                    ratio_mean, op=torch.distributed.ReduceOp.AVG
+                )
 
             current_ratio_val = ratio_mean.item()
 
             # EMA smoothing if enabled
             if self.ema_gamma < 1.0:
                 # Detach ratio_ema to prevent gradient history accumulation
-                ratio_s = self.ema_gamma * self.ratio_ema.detach() + (1 - self.ema_gamma) * ratio_mean
+                ratio_s = (
+                    self.ema_gamma * self.ratio_ema.detach()
+                    + (1 - self.ema_gamma) * ratio_mean
+                )
                 # Update running average with detached value
                 self.ratio_ema = ratio_s.detach()
             else:
@@ -153,4 +160,7 @@ class AionResidual(nn.Module):
 
     def extra_repr(self) -> str:
         """Return extra representation for debugging."""
-        return f"alpha0={self.alpha0.item():.4f}, beta={self.beta.item():.4f}, " f"ema_gamma={self.ema_gamma}"
+        return (
+            f"alpha0={self.alpha0.item():.4f}, beta={self.beta.item():.4f}, "
+            f"ema_gamma={self.ema_gamma}"
+        )

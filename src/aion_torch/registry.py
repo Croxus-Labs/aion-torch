@@ -43,7 +43,9 @@ def make_adapter(name: str, **kwargs: Any):
         >>> adapter = make_adapter("aion", alpha0=0.1, beta=0.05)
     """
     if name not in _registry:
-        raise KeyError(f"Adapter '{name}' not found. Available: {list(_registry.keys())}")
+        raise KeyError(
+            f"Adapter '{name}' not found. Available: {list(_registry.keys())}"
+        )
     return _registry[name](**kwargs)
 
 

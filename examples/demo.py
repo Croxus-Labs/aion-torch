@@ -57,7 +57,10 @@ def simple_demo():
             alpha = _get_alpha_cached(layer)
             ratio_ema = layer.ratio_ema.item()
             out_energy = out.pow(2).mean().item()
-            print(f"Step {step:2d}: alpha={alpha:.6f}, ratio_ema={ratio_ema:.6f}, " f"out_energy={out_energy:.6f}")
+            print(
+                f"Step {step:2d}: alpha={alpha:.6f}, ratio_ema={ratio_ema:.6f}, "
+                f"out_energy={out_energy:.6f}"
+            )
 
     print("\n[DONE] Demo completed successfully!")
 
@@ -71,7 +74,9 @@ def training_demo():
     class SimpleModel(nn.Module):
         def __init__(self, dim):
             super().__init__()
-            self.ffn = nn.Sequential(nn.Linear(dim, dim * 4), nn.GELU(), nn.Linear(dim * 4, dim))
+            self.ffn = nn.Sequential(
+                nn.Linear(dim, dim * 4), nn.GELU(), nn.Linear(dim * 4, dim)
+            )
             self.aion = AionResidual(alpha0=0.1, beta=0.05)
             self.ln = nn.LayerNorm(dim)
 
@@ -170,7 +175,9 @@ def export_metrics_demo():
 
     print(f"\n[DONE] Metrics exported to: {output_file}")
     print(f"  Total steps: {len(metrics)}")
-    print(f"  Alpha range: [{min(m['alpha'] for m in metrics):.6f}, {max(m['alpha'] for m in metrics):.6f}]")
+    print(
+        f"  Alpha range: [{min(m['alpha'] for m in metrics):.6f}, {max(m['alpha'] for m in metrics):.6f}]"
+    )
 
 
 def main():

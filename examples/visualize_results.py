@@ -101,7 +101,11 @@ def plot_crash_test_results():
 
     ax1.set_xlabel("Training Step", fontsize=12, fontweight="bold")
     ax1.set_ylabel("Loss (MSE)", fontsize=12, fontweight="bold")
-    ax1.set_title("Crash Test: Loss Comparison (600-layer Transformer)", fontsize=14, fontweight="bold")
+    ax1.set_title(
+        "Crash Test: Loss Comparison (600-layer Transformer)",
+        fontsize=14,
+        fontweight="bold",
+    )
     ax1.legend(loc="upper right", fontsize=10)
     ax1.grid(True, alpha=0.3)
     ax1.set_yscale("log")
@@ -151,7 +155,9 @@ def plot_crash_test_results():
 
     ax2.set_xlabel("Training Step", fontsize=12, fontweight="bold")
     ax2.set_ylabel("Gradient Norm", fontsize=12, fontweight="bold")
-    ax2.set_title("Crash Test: Gradient Norm Comparison", fontsize=14, fontweight="bold")
+    ax2.set_title(
+        "Crash Test: Gradient Norm Comparison", fontsize=14, fontweight="bold"
+    )
     ax2.legend(loc="upper right", fontsize=10)
     ax2.grid(True, alpha=0.3)
     ax2.set_yscale("log")
@@ -177,7 +183,9 @@ def plot_overhead_results():
     methods = df["method"].values
     mean_times = df["mean_step_time_ms"].values
     std_times = df["std_step_time_ms"].values
-    overhead_pct = float(df[df["method"] == "AION Residual"]["overhead_percent"].values[0])
+    overhead_pct = float(
+        df[df["method"] == "AION Residual"]["overhead_percent"].values[0]
+    )
 
     fig, ax = plt.subplots(1, 1, figsize=(8, 6))
 

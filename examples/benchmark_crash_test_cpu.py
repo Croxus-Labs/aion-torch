@@ -31,7 +31,9 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 # ============================================================================
 # Configuration
 # ============================================================================
-DEPTH = 1000  # Deep enough to test stability (increased to demonstrate AION's advantage)
+DEPTH = (
+    1000  # Deep enough to test stability (increased to demonstrate AION's advantage)
+)
 DIM = 128  # Small dimension to fit in RAM
 SEQ_LEN = 64
 BATCH_SIZE = 2
@@ -256,7 +258,9 @@ def _run_model_test(
         grads.append(grad_norm)
 
         if (step + 1) % 25 == 0:
-            print(f"  Step {step + 1:4d}/{NUM_STEPS}: Loss={loss:.6f}, GradNorm={grad_norm:.4f}")
+            print(
+                f"  Step {step + 1:4d}/{NUM_STEPS}: Loss={loss:.6f}, GradNorm={grad_norm:.4f}"
+            )
 
     if not crashed:
         print(f"[DONE] {model_name} completed {NUM_STEPS} steps successfully!")
@@ -347,7 +351,11 @@ def run_crash_test():
     def std_over_seeds(series_list):
         out = []
         for t in range(NUM_STEPS):
-            vals = [s[t] for s in series_list if t < len(s) and not (isinstance(s[t], float) and math.isnan(s[t]))]
+            vals = [
+                s[t]
+                for s in series_list
+                if t < len(s) and not (isinstance(s[t], float) and math.isnan(s[t]))
+            ]
             if len(vals) < 2:
                 out.append(0.0)
                 continue

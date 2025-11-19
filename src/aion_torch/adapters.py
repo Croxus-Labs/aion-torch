@@ -68,7 +68,9 @@ class AionBlock(nn.Module):
         super().__init__()
         self.norm = nn.LayerNorm(dim)
         self.layer = layer
-        self.aion = AionResidual(alpha0=alpha0, beta=beta, ema_gamma=ema_gamma, epsilon=epsilon)
+        self.aion = AionResidual(
+            alpha0=alpha0, beta=beta, ema_gamma=ema_gamma, epsilon=epsilon
+        )
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """Apply the AION block transformation.
