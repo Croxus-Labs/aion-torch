@@ -7,12 +7,11 @@ Usage:
     python examples/visualize_results.py
 """
 
-import math
 from pathlib import Path
 
 import matplotlib.pyplot as plt
-import pandas as pd
 import numpy as np
+import pandas as pd
 
 plt.style.use("seaborn-v0_8-darkgrid")
 plt.rcParams["figure.dpi"] = 100
@@ -46,12 +45,11 @@ def plot_crash_test_results():
     for col in df.columns:
         if col != "step":
             df[col] = df[col].apply(safe_float)
-    
+
     steps = df["step"].values
-    
+
     # Create figure with two subplots
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 10))
-    
     # Plot 1: Loss comparison
     ax1.plot(
         steps,
@@ -103,9 +101,7 @@ def plot_crash_test_results():
 
     ax1.set_xlabel("Training Step", fontsize=12, fontweight="bold")
     ax1.set_ylabel("Loss (MSE)", fontsize=12, fontweight="bold")
-    ax1.set_title(
-        "Crash Test: Loss Comparison (600-layer Transformer)", fontsize=14, fontweight="bold"
-    )
+    ax1.set_title("Crash Test: Loss Comparison (600-layer Transformer)", fontsize=14, fontweight="bold")
     ax1.legend(loc="upper right", fontsize=10)
     ax1.grid(True, alpha=0.3)
     ax1.set_yscale("log")
@@ -124,11 +120,11 @@ def plot_crash_test_results():
         alpha=0.2,
         color="#d62728",
     )
-    
+
     if aion_valid.any():
         aion_grad_mean = df["grad_norm_aion_mean"].values[: last_valid_idx + 1]
         aion_grad_std = df["grad_norm_aion_std"].values[: last_valid_idx + 1]
-        
+
         ax2.plot(
             aion_steps,
             aion_grad_mean,
@@ -143,7 +139,7 @@ def plot_crash_test_results():
             alpha=0.2,
             color="#2ca02c",
         )
-        
+
         if last_valid_idx < len(steps) - 1:
             ax2.axvline(
                 x=crash_step,
@@ -152,20 +148,18 @@ def plot_crash_test_results():
                 alpha=0.7,
                 linewidth=1.5,
             )
-    
+
     ax2.set_xlabel("Training Step", fontsize=12, fontweight="bold")
     ax2.set_ylabel("Gradient Norm", fontsize=12, fontweight="bold")
-    ax2.set_title(
-        "Crash Test: Gradient Norm Comparison", fontsize=14, fontweight="bold"
-    )
+    ax2.set_title("Crash Test: Gradient Norm Comparison", fontsize=14, fontweight="bold")
     ax2.legend(loc="upper right", fontsize=10)
     ax2.grid(True, alpha=0.3)
     ax2.set_yscale("log")
 
-    plt.tight_layout()
+    fig.tight_layout()
 
     output_path = OUTPUT_DIR / "crash_test_results_gpu.png"
-    plt.savefig(output_path, bbox_inches="tight", facecolor="white")
+    fig.savefig(output_path, bbox_inches="tight", facecolor="white")
     print(f"[OK] Saved crash test chart: {output_path}")
     plt.close()
 
@@ -199,7 +193,7 @@ def plot_overhead_results():
         linewidth=1.5,
     )
 
-    for i, (bar, mean, std) in enumerate(zip(bars, mean_times, std_times)):
+    for bar, mean, std in zip(bars, mean_times, std_times, strict=True):
         height = bar.get_height()
         ax.text(
             bar.get_x() + bar.get_width() / 2.0,
@@ -210,7 +204,7 @@ def plot_overhead_results():
             fontsize=11,
             fontweight="bold",
         )
-    
+
     ax.set_ylabel("Mean Step Time (ms)", fontsize=12, fontweight="bold")
     ax.set_title(
         f"Overhead Benchmark: AION vs Standard Residual\n(Unoptimized AION baseline, overhead: +{overhead_pct:.2f}%)",
@@ -221,10 +215,10 @@ def plot_overhead_results():
     ax.grid(True, alpha=0.3, axis="y")
     ax.set_axisbelow(True)
 
-    plt.tight_layout()
+    fig.tight_layout()
 
     output_path = OUTPUT_DIR / "overhead_test_results_gpu.png"
-    plt.savefig(output_path, bbox_inches="tight", facecolor="white")
+    fig.savefig(output_path, bbox_inches="tight", facecolor="white")
     print(f"[OK] Saved overhead chart: {output_path}")
     plt.close()
 
@@ -233,10 +227,10 @@ def main():
     """Generate all visualizations."""
     print("Generating benchmark visualizations...")
     print("=" * 60)
-    
+
     plot_crash_test_results()
     plot_overhead_results()
-    
+
     print("=" * 60)
     print("[OK] All visualizations generated successfully!")
     print(f"\nCharts saved in: {OUTPUT_DIR}")
