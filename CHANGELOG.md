@@ -3,7 +3,22 @@
 All notable changes to AION-Torch will be documented in this file.
 
 ## [Unreleased]
-- No unreleased changes yet
+
+## [0.3.0] - 2025-11-19
+
+### Added
+- **New `AionBlock` Component**: Added high-level `AionBlock` class in `adapters.py` that implements the Pre-LayerNorm pattern with AION residual scaling.
+- **Enhanced Monitoring**: Added `return_stats` parameter to `AionResidual.forward()` to return internal statistics (alpha, ratio) for debugging and visualization.
+- **Benchmarking Suite**: Added comprehensive benchmarking scripts in `examples/` for CPU/GPU overhead and stability testing.
+- **Visualization Tools**: Added `examples/visualize_results.py` to plot benchmark comparisons.
+- Added `tests/test_aion_block.py` for `AionBlock` verification.
+
+### Fixed
+- **Distributed Training**: Added distributed synchronization (all_reduce) for energy ratio calculation to ensure consistent alpha values across all ranks in DDP/DataParallel training.
+- **Code Quality**: Fixed Pylint warning for unnecessary ellipsis in `ResidualAdapter` protocol definition.
+
+### Performance
+- **Optimization**: JIT-compiled `energy()` function using `@torch.jit.script` for faster execution.
 
 ---
 
@@ -64,6 +79,7 @@ Fixed in v0.2.0:
 
 ---
 
-[Unreleased]: https://github.com/Croxus-Labs/aion-torch/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/Croxus-Labs/aion-torch/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/Croxus-Labs/aion-torch/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/Croxus-Labs/aion-torch/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/Croxus-Labs/aion-torch/releases/tag/v0.1.0

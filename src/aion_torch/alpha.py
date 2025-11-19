@@ -8,7 +8,9 @@ where ratio_s = E[y]/(E[x] + ε) is optionally EMA-smoothed.
 import torch
 
 
-def compute_alpha(alpha0: torch.Tensor, beta: torch.Tensor, ratio_s: torch.Tensor) -> torch.Tensor:
+def compute_alpha(
+    alpha0: torch.Tensor, beta: torch.Tensor, ratio_s: torch.Tensor
+) -> torch.Tensor:
     """Compute AION adaptive scaling parameter.
 
     Formula: α = α₀ / (1 + β · ratio_s)
