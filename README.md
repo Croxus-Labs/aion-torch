@@ -1,6 +1,6 @@
 # AION-Torch: Adaptive Input/Output Normalization
 
-[![PyPI version](https://badge.fury.io/py/aion-torch.svg)](https://badge.fury.io/py/aion-torch)
+[![PyPI version](https://img.shields.io/pypi/v/aion-torch.svg)](https://pypi.org/project/aion-torch/)
 [![PyPI downloads](https://img.shields.io/pypi/dm/aion-torch.svg)](https://pypi.org/project/aion-torch/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/release/python-3100/)
