@@ -728,3 +728,20 @@ class TestAionResidual:
         # Gradients should flow through alpha_cached to alpha0 and beta
         assert layer.alpha0.grad is not None
         assert layer.beta.grad is not None
+
+    def test_return_stats(self) -> None:
+        """Test that forward returns stats when requested."""
+        layer = AionResidual(alpha0=0.1, beta=0.05)
+        x = torch.randn(4, 8)
+        y = torch.randn(4, 8)
+
+        layer.train()
+        # Type ignore because return type varies based on flag
+        out, stats = layer(x, y, return_stats=True)  # type: ignore
+
+        assert isinstance(stats, dict)
+        assert "alpha" in stats
+        assert "ratio" in stats
+        assert isinstance(stats["alpha"], float)
+        assert isinstance(stats["ratio"], float)
+        assert out.shape == x.shape

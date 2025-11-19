@@ -75,15 +75,19 @@ class AionResidual(nn.Module):
         self.step_count: torch.Tensor
         self.alpha_cached: torch.Tensor
 
-    def forward(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
+    def forward(
+        self, x: torch.Tensor, y: torch.Tensor, return_stats: bool = False
+    ) -> torch.Tensor | tuple[torch.Tensor, dict[str, float]]:
         """Apply adaptive residual connection.
 
         Args:
             x: Input tensor (residual branch input)
             y: Transform output tensor (e.g., from FFN, attention)
+            return_stats: Whether to return internal statistics (alpha, ratio)
 
         Returns:
             Combined output: x + α · y where α is adaptive
+            If return_stats is True, returns (output, stats_dict)
 
         Raises:
             ValueError: If input tensors have mismatched shapes or are empty.
@@ -98,6 +102,7 @@ class AionResidual(nn.Module):
 
         # Always update alpha in training mode
         # This ensures correct behavior in distributed training (DataParallel/DDP)
+        current_ratio_val = 0.0
         if self.training:
             # Compute energies
             ex = energy(x, dim=-1, keepdim=False)  # [B, T] or [B] depending on dims
@@ -106,24 +111,43 @@ class AionResidual(nn.Module):
             # Compute ratio: E[y]/(E[x] + ε)
             ratio = ey / (ex + self.epsilon)
 
+            # Calculate mean ratio for this batch (scalar)
+            ratio_mean = ratio if ratio.ndim == 0 else ratio.mean()
+
+            # Distributed synchronization: Average ratio across all ranks
+            if torch.distributed.is_available() and torch.distributed.is_initialized():
+                torch.distributed.all_reduce(ratio_mean, op=torch.distributed.ReduceOp.AVG)
+
+            current_ratio_val = ratio_mean.item()
+
             # EMA smoothing if enabled
             if self.ema_gamma < 1.0:
-                # Handle scalar case for ratio.mean()
-                ratio_mean = ratio if ratio.ndim == 0 else ratio.mean()
-                ratio_s = self.ema_gamma * self.ratio_ema + (1 - self.ema_gamma) * ratio_mean
-                self.ratio_ema.copy_(ratio_s)
+                # Detach ratio_ema to prevent gradient history accumulation
+                ratio_s = self.ema_gamma * self.ratio_ema.detach() + (1 - self.ema_gamma) * ratio_mean
+                # Update running average with detached value
+                self.ratio_ema = ratio_s.detach()
             else:
-                # Handle scalar case
-                ratio_s = ratio if ratio.ndim == 0 else ratio.mean()
+                ratio_s = ratio_mean
 
             # Compute adaptive alpha
-            self.alpha_cached.copy_(compute_alpha(self.alpha0, self.beta, ratio_s))
+            # Use assignment instead of copy_() to avoid in-place graph extension
+            # which causes "backward through graph a second time" errors
+            self.alpha_cached = compute_alpha(self.alpha0, self.beta, ratio_s)
 
             # Update step count for tracking
             self.step_count.add_(1)
 
         # Apply residual connection with cached alpha
-        return x + self.alpha_cached * y
+        out = x + self.alpha_cached * y
+
+        if return_stats:
+            stats = {
+                "alpha": self.alpha_cached.item(),
+                "ratio": current_ratio_val if self.training else self.ratio_ema.item(),
+            }
+            return out, stats
+
+        return out
 
     def extra_repr(self) -> str:
         """Return extra representation for debugging."""

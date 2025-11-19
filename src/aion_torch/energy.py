@@ -7,6 +7,7 @@ stability guarantees through fp32 accumulation.
 import torch
 
 
+@torch.jit.script
 def energy(t: torch.Tensor, dim: int = -1, keepdim: bool = True) -> torch.Tensor:
     """Compute mean squared energy E[t] = mean(t²) with fp32 accumulation.
 
