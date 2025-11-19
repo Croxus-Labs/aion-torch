@@ -24,9 +24,7 @@ except ModuleNotFoundError:
 
 def _get_alpha_cached(adapter: AionResidual) -> float:
     """Return cached alpha value (helper for demo logging)."""
-    # Accessing protected member for demo purposes
-    cached = getattr(adapter, "_alpha_cached", None)
-    return cached.item() if cached is not None else 0.0
+    return float(adapter.alpha_cached.item())
 
 
 def simple_demo():
@@ -39,7 +37,6 @@ def simple_demo():
         alpha0=0.1,
         beta=0.05,
         ema_gamma=0.99,
-        k_update=4,
     )
 
     print(f"\nLayer config: {layer}")
@@ -75,7 +72,7 @@ def training_demo():
         def __init__(self, dim):
             super().__init__()
             self.ffn = nn.Sequential(nn.Linear(dim, dim * 4), nn.GELU(), nn.Linear(dim * 4, dim))
-            self.aion = AionResidual(alpha0=0.1, beta=0.05, k_update=1)
+            self.aion = AionResidual(alpha0=0.1, beta=0.05)
             self.ln = nn.LayerNorm(dim)
 
         def forward(self, x):
@@ -127,7 +124,7 @@ def export_metrics_demo():
     print("AION Metrics Export Demo")
     print("=" * 60)
 
-    layer = AionResidual(alpha0=0.1, beta=0.05, k_update=1, ema_gamma=0.99)
+    layer = AionResidual(alpha0=0.1, beta=0.05, ema_gamma=0.99)
 
     metrics = []
 

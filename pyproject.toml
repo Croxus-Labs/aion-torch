@@ -1,6 +1,6 @@
 [project]
 name = "aion-torch"
-version = "0.1.0"
+version = "0.2.0"
 description = "Adaptive Input/Output Normalization for deep neural networks. Enables stable training of extremely deep networks through adaptive residual scaling (Alpha) by Babayev's Theory"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -39,10 +39,10 @@ bench = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/Sweet-Epoch-Labs/aion-torch"
-Repository = "https://github.com/Sweet-Epoch-Labs/aion-torch"
-Issues = "https://github.com/Sweet-Epoch-Labs/aion-torch/issues"
-Documentation = "https://github.com/Sweet-Epoch-Labs/aion-torch#readme"
+Homepage = "https://github.com/Croxus-Labs/aion-torch"
+Repository = "https://github.com/Croxus-Labs/aion-torch"
+Issues = "https://github.com/Croxus-Labs/aion-torch/issues"
+Documentation = "https://github.com/Croxus-Labs/aion-torch#readme"
 
 [build-system]
 requires = ["setuptools>=61.0", "wheel"]

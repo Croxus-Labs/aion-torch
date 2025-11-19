@@ -18,7 +18,7 @@ Advanced usage with registry:
     >>> layer = make_adapter("aion", alpha0=0.1, beta=0.05)
 """
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 from .aion_adapter import AionResidual
 from .alpha import compute_alpha
