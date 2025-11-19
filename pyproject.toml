@@ -1,10 +1,11 @@
 [project]
 name = "aion-torch"
-version = "0.1.0"
+version = "0.2.0"
 description = "Adaptive Input/Output Normalization for deep neural networks. Enables stable training of extremely deep networks through adaptive residual scaling (Alpha) by Babayev's Theory"
 readme = "README.md"
 requires-python = ">=3.10"
-license = {text = "MIT"}
+license = "MIT"
+license-files = ["LICENSE"]
 authors = [
     {name = "Abbasagha Babayev"}
 ]
@@ -12,7 +13,6 @@ keywords = ["deep-learning", "normalization", "pytorch", "residual-connections"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
@@ -39,10 +39,10 @@ bench = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/Sweet-Epoch-Labs/aion-torch"
-Repository = "https://github.com/Sweet-Epoch-Labs/aion-torch"
-Issues = "https://github.com/Sweet-Epoch-Labs/aion-torch/issues"
-Documentation = "https://github.com/Sweet-Epoch-Labs/aion-torch#readme"
+Homepage = "https://github.com/Croxus-Labs/aion-torch"
+Repository = "https://github.com/Croxus-Labs/aion-torch"
+Issues = "https://github.com/Croxus-Labs/aion-torch/issues"
+Documentation = "https://github.com/Croxus-Labs/aion-torch#readme"
 
 [build-system]
 requires = ["setuptools>=61.0", "wheel"]

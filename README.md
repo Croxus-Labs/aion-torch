@@ -18,7 +18,7 @@ and improves convergence without manual tuning.
 
 **AION demonstrates superior numerical stability and faster convergence.**
 
-![AION vs Standard Transformer Crash Test](examples/outputs/crash_test_results_gpu.png)
+![AION vs Standard Transformer Crash Test](https://raw.githubusercontent.com/Croxus-Labs/aion-torch/main/examples/outputs/crash_test_results_gpu.png)
 
 _600-layer transformer test on GPU: Both models completed all 150 training steps successfully. AION Transformer achieved significantly lower loss (0.0011 ± 0.0003) and more stable gradients compared to Standard Transformer (0.0075 ± 0.0015)._
 
@@ -70,7 +70,7 @@ out = layer(x, y)             # Adaptive residual: x + α·y
 
 **AION adds ~36% computational overhead per training step.**
 
-![Overhead Benchmark Results](examples/outputs/overhead_test_results_gpu.png)
+![Overhead Benchmark Results](https://raw.githubusercontent.com/Croxus-Labs/aion-torch/main/examples/outputs/overhead_test_results_gpu.png)
 
 _Benchmark configuration: 4-layer transformer, batch size 8, sequence length 128, dimension 512. Results averaged over 150 training steps (after 20 warmup steps)._
 
@@ -85,11 +85,25 @@ stability benefits shown in the crash test.
 
 There are several ways to reduce this cost in practice:
 
-- **k-update optimization**: use `k_update > 1` to update α less frequently
-  (e.g. `k_update=4` reduces the AION-specific computation by ~75%).
+- **Gradient accumulation**: accumulate gradients over multiple batches to
+  amortize the per-batch overhead.
 - **Engineering optimizations**: fusing operations, reusing statistics, or using
   lower precision for energy tracking. With careful optimization, we expect the
   overhead to be reduced to below ~5% in production setups.
+
+Note: Alpha updates every forward pass in training mode to ensure correct
+behavior in distributed training (DataParallel/DDP).
+
+## What's New in v0.2.0
+
+This release fixes critical bugs and adds comprehensive validation:
+
+- ✅ **Fixed distributed training support** (DataParallel/DDP)
+- ✅ **Fixed state dict handling** - checkpoints now work correctly
+- ✅ **Added input validation** - better error messages
+- ✅ **28 new test cases** - comprehensive edge case coverage
+
+**Breaking Change**: Removed `k_update` parameter. See [CHANGELOG](https://github.com/Croxus-Labs/aion-torch/blob/main/CHANGELOG.md) for migration guide.
 
 ## Features
 
@@ -117,6 +131,10 @@ make test
 # Install pre-commit hooks
 make pre-commit-install
 ```
+
+## Changelog
+
+See [CHANGELOG.md](https://github.com/Croxus-Labs/aion-torch/blob/main/CHANGELOG.md) for detailed release notes and migration guides.
 
 ## License
 

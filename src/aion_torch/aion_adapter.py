@@ -26,19 +26,35 @@ class AionResidual(nn.Module):
         alpha0: float = 0.1,
         beta: float = 0.05,
         ema_gamma: float = 0.99,
-        k_update: int = 1,
         epsilon: float = 1e-8,
     ):
         """Initialize AION residual adapter.
 
         Args:
-            alpha0: Base scaling parameter (learnable)
-            beta: Adaptation coefficient (learnable)
-            ema_gamma: EMA smoothing factor for ratio_s (1.0 = no smoothing)
-            k_update: Update alpha every k steps (for efficiency)
-            epsilon: Small constant for numerical stability
+            alpha0: Base scaling parameter (learnable). Must be positive.
+            beta: Adaptation coefficient (learnable). Must be non-negative.
+            ema_gamma: EMA smoothing factor for ratio_s (1.0 = no smoothing).
+                Must be in [0, 1].
+            epsilon: Small constant for numerical stability. Must be positive.
+
+        Raises:
+            ValueError: If any parameter is out of valid range.
+
+        Note:
+            Alpha updates every forward pass in training mode to ensure correct
+            behavior in distributed training (DataParallel/DDP).
         """
         super().__init__()
+
+        # Input validation
+        if alpha0 <= 0:
+            raise ValueError(f"alpha0 must be positive, got {alpha0}")
+        if beta < 0:
+            raise ValueError(f"beta must be non-negative, got {beta}")
+        if not (0 <= ema_gamma <= 1):
+            raise ValueError(f"ema_gamma must be in [0, 1], got {ema_gamma}")
+        if epsilon <= 0:
+            raise ValueError(f"epsilon must be positive, got {epsilon}")
 
         # Learnable parameters
         self.alpha0 = nn.Parameter(torch.tensor(alpha0, dtype=torch.float32))
@@ -46,17 +62,18 @@ class AionResidual(nn.Module):
 
         # Configuration
         self.ema_gamma = ema_gamma
-        self.k_update = k_update
         self.epsilon = epsilon
 
-        # State
+        # State - register alpha_cached as buffer for proper state dict handling
         self.register_buffer("ratio_ema", torch.tensor(1.0, dtype=torch.float32))
         self.register_buffer("step_count", torch.tensor(0, dtype=torch.int32))
-        self._alpha_cached: torch.Tensor | None = None
+        # Initialize alpha_cached as buffer (will be updated during forward)
+        self.register_buffer("alpha_cached", torch.tensor(alpha0, dtype=torch.float32))
 
         # Type hints for buffers (for static type checkers)
         self.ratio_ema: torch.Tensor
         self.step_count: torch.Tensor
+        self.alpha_cached: torch.Tensor
 
     def forward(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
         """Apply adaptive residual connection.
@@ -67,8 +84,21 @@ class AionResidual(nn.Module):
 
         Returns:
             Combined output: x + α · y where α is adaptive
+
+        Raises:
+            ValueError: If input tensors have mismatched shapes or are empty.
         """
-        if self.training and self.step_count.item() % self.k_update == 0:
+        # Input validation - check empty tensors first
+        if x.numel() == 0:
+            raise ValueError("Input tensor x cannot be empty")
+        if y.numel() == 0:
+            raise ValueError("Input tensor y cannot be empty")
+        if x.shape != y.shape:
+            raise ValueError(f"Input shapes must match: x.shape={x.shape}, y.shape={y.shape}")
+
+        # Always update alpha in training mode
+        # This ensures correct behavior in distributed training (DataParallel/DDP)
+        if self.training:
             # Compute energies
             ex = energy(x, dim=-1, keepdim=False)  # [B, T] or [B] depending on dims
             ey = energy(y, dim=-1, keepdim=False)
@@ -78,24 +108,23 @@ class AionResidual(nn.Module):
 
             # EMA smoothing if enabled
             if self.ema_gamma < 1.0:
-                ratio_s = self.ema_gamma * self.ratio_ema + (1 - self.ema_gamma) * ratio.mean()
+                # Handle scalar case for ratio.mean()
+                ratio_mean = ratio if ratio.ndim == 0 else ratio.mean()
+                ratio_s = self.ema_gamma * self.ratio_ema + (1 - self.ema_gamma) * ratio_mean
                 self.ratio_ema.copy_(ratio_s)
             else:
-                ratio_s = ratio.mean()
+                # Handle scalar case
+                ratio_s = ratio if ratio.ndim == 0 else ratio.mean()
 
             # Compute adaptive alpha
-            self._alpha_cached = compute_alpha(self.alpha0, self.beta, ratio_s)
+            self.alpha_cached.copy_(compute_alpha(self.alpha0, self.beta, ratio_s))
 
-        # Update step count
-        self.step_count.add_(1)
+            # Update step count for tracking
+            self.step_count.add_(1)
 
         # Apply residual connection with cached alpha
-        alpha = self._alpha_cached if self._alpha_cached is not None else self.alpha0
-        return x + alpha * y
+        return x + self.alpha_cached * y
 
     def extra_repr(self) -> str:
         """Return extra representation for debugging."""
-        return (
-            f"alpha0={self.alpha0.item():.4f}, beta={self.beta.item():.4f}, "
-            f"ema_gamma={self.ema_gamma}, k_update={self.k_update}"
-        )
+        return f"alpha0={self.alpha0.item():.4f}, beta={self.beta.item():.4f}, " f"ema_gamma={self.ema_gamma}"
