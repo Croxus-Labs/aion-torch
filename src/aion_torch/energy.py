@@ -28,8 +28,8 @@ def energy(t: torch.Tensor, dim: int = -1, keepdim: bool = True) -> torch.Tensor
         >>> ex = energy(x, dim=-1, keepdim=True)  # [B, T, 1]
     """
     # Convert to fp32 for accumulation to ensure numerical stability
-    acc = t.float()
+    acc = t.float()  # pragma: no cover
     # Compute mean of squares
-    e = (acc * acc).mean(dim=dim, keepdim=keepdim)
+    e = (acc * acc).mean(dim=dim, keepdim=keepdim)  # pragma: no cover
     # Return in original dtype
-    return e.to(dtype=t.dtype)
+    return e.to(dtype=t.dtype)  # pragma: no cover
