@@ -42,13 +42,7 @@ jobs:
 
     - name: Run tests with pytest
       run: |
-        pytest tests/ -v --cov=src/aion_torch --cov-report=xml --cov-report=term
-
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v4
-      with:
-        file: ./coverage.xml
-        fail_ci_if_error: false
+        pytest tests/ -v --cov=src/aion_torch --cov-report=term
 
     - name: Verify Examples (Demo)
       run: |
