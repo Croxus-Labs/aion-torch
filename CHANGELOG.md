@@ -4,6 +4,11 @@ All notable changes to AION-Torch will be documented in this file.
 
 ## [Unreleased]
 
+## [0.3.2] - 2025-11-21
+
+### Changed
+- Updated documentation links in README
+
 ## [0.3.1] - 2025-11-21
 
 ### Changed
@@ -86,7 +91,8 @@ Fixed in v0.2.0:
 
 ---
 
-[Unreleased]: https://github.com/Croxus-Labs/aion-torch/compare/v0.3.1...HEAD
+[Unreleased]: https://github.com/Croxus-Labs/aion-torch/compare/v0.3.2...HEAD
+[0.3.2]: https://github.com/Croxus-Labs/aion-torch/compare/v0.3.1...v0.3.2
 [0.3.1]: https://github.com/Croxus-Labs/aion-torch/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/Croxus-Labs/aion-torch/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/Croxus-Labs/aion-torch/compare/v0.1.0...v0.2.0
