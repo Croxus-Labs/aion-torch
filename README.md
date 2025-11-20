@@ -86,7 +86,16 @@ where `ratio` measures the relative magnitude of the transformation output compa
 
 **Key insight**: By maintaining balanced signal propagation, AION ensures gradients flow stably through arbitrarily deep networks without exponential growth or decay.
 
-*For the theoretical foundation and mathematical proofs, DM me.*
+## 📚 Documentation
+
+For the theoretical foundation and mathematical proofs, see the following documents:
+
+- [Balance Theory](https://drive.google.com/open?id=1jPQxw96TO85S07HXl7W7dvGuOTZtPJPE&usp=drive_copy) - Core theoretical foundation for AION
+
+These are more general math papers that inspired the ideas, but are **not required** to use the library:
+
+- [Angular Symmetry Goldbach](https://drive.google.com/open?id=1EiPzyXHHuYCfYIBzDY1rqqGz9pDlhEM1&usp=drive_copy)
+- [Cone Symmetry Goldbach](https://drive.google.com/open?id=1Go8uOayDtJykcdOlZ1RQgs3uenwaZmQr&usp=drive_copy)
 
 ## 🤝 Contributing
 
@@ -104,6 +113,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-<div align="center">
-  <sub>Built with ❤️ x Abbasagha Babayev</sub>
-</div>
+<p align="center">
+  <sub>Built with ❤️ for the ML community</sub>
+</p>
