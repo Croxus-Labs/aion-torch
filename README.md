@@ -90,12 +90,12 @@ where `ratio` measures the relative magnitude of the transformation output compa
 
 For the theoretical foundation and mathematical proofs, see the following documents:
 
-- [Balance Theory](https://drive.google.com/open?id=1jPQxw96TO85S07HXl7W7dvGuOTZtPJPE&usp=drive_copy) - Core theoretical foundation for AION
+- [Balance Theory](https://drive.google.com/open?id=1Go8uOayDtJykcdOlZ1RQgs3uenwaZmQr&usp=drive_copy) - Core theoretical foundation for AION
 
 These are more general math papers that inspired the ideas, but are **not required** to use the library:
 
 - [Angular Symmetry Goldbach](https://drive.google.com/open?id=1EiPzyXHHuYCfYIBzDY1rqqGz9pDlhEM1&usp=drive_copy)
-- [Cone Symmetry Goldbach](https://drive.google.com/open?id=1Go8uOayDtJykcdOlZ1RQgs3uenwaZmQr&usp=drive_copy)
+- [Cone Symmetry Goldbach](https://drive.google.com/open?id=1jPQxw96TO85S07HXl7W7dvGuOTZtPJPE&usp=drive_copy)
 
 ## 🤝 Contributing
 
