@@ -86,6 +86,19 @@ where `ratio` measures the relative magnitude of the transformation output compa
 
 **Key insight**: By maintaining balanced signal propagation, AION ensures gradients flow stably through arbitrarily deep networks without exponential growth or decay.
 
+### AION as the General Form
+
+Mathematically, other stabilization methods are just **special cases** of the AION formula where adaptivity ($\beta$) is turned off:
+
+| Method | AION Equivalent Parameters | Behavior |
+|:---|:---|:---|
+| **DeepNorm** | $\beta=0, \alpha_0 = \frac{1}{\sqrt{2L}}$ | Fixed static scaling based on depth |
+| **Pre-LN** | $\beta=0, \alpha_0 = 1$ | No scaling (identity) |
+| **ReZero** | $\beta=0, \alpha_0 = \text{learnable}$ | Learnable static scalar |
+| **AION** | $\beta > 0$ | **Dynamic adaptation** based on signal energy |
+
+AION generalizes these approaches by adding the **control term** ($1 + \beta \cdot \text{ratio}$), allowing it to react to instability in real-time rather than relying on static assumptions.
+
 ## 📚 Documentation
 
 For the theoretical foundation and mathematical proofs, see the following documents:
